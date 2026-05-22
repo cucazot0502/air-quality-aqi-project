@@ -62,7 +62,22 @@ with tab2:
     if {"Month","AQI"}.issubset(dff.columns):
         st.plotly_chart(px.line(dff.groupby("Month",as_index=False)["AQI"].mean(),x="Month",y="AQI",markers=True,title="Monthly Average AQI"),use_container_width=True)
     if {"Country","Month","AQI"}.issubset(dff.columns):
-        st.plotly_chart(px.line(dff.groupby(["Country","Month"],as_index=False)["AQI"].mean(),x="Month",y="AQI",color="Country",markers=True,title="AQI by Country and Month"),use_container_width=True)
+        country_month = (
+            dff.groupby(["Country", "Month"], as_index=False)["AQI"]
+            .mean()
+            .sort_values(["Country", "Month"])
+        )
+        fig = px.line(
+            country_month,
+            x="Month",
+            y="AQI",
+            color="Country",
+            markers=True,
+            line_shape="spline",
+            title="AQI by Country and Month"
+        )
+        fig.update_xaxes(dtick=1)
+        st.plotly_chart(fig, use_container_width=True)
     if {"City","AQI"}.issubset(dff.columns):
         st.plotly_chart(px.bar(dff.groupby("City",as_index=False)["AQI"].mean().sort_values("AQI",ascending=False).head(10),x="City",y="AQI",text_auto=".2f",color="AQI",title="Top 10 Cities by Average AQI"),use_container_width=True)
 with tab3:
