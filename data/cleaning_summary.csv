@@ -1,0 +1,4 @@
+metric,before,after
+rows,11000,10000
+duplicates,1000,0
+missing_values,518,0
